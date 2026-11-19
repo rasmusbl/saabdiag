@@ -1,0 +1,36 @@
+{
+  "schemaVersion": 1,
+  "reviewedOn": "2026-11-08",
+  "entries": [
+    {
+      "id": "saab-wis",
+      "title": "Saab Workshop Information System Online",
+      "url": "https://saabwisonline.com/",
+      "kind": "workshop-reference",
+      "publisher": "Historical Saab workshop material",
+      "host": "SaabWISOnline",
+      "applicability": "Select exact model generation, model year, engine and system on the source site",
+      "rights": "Link only; redistribution permission not established"
+    },
+    {
+      "id": "tech2-guide-2005",
+      "title": "Tech 2 User Guide (2005)",
+      "url": "https://www.saabnet.com/tsn/faq/manuals/Tech2UsersGuide.pdf",
+      "kind": "scanner-manual",
+      "publisher": "GM Service and Parts Operations",
+      "host": "Saabnet",
+      "applicability": "Historical Tech 2 hardware guide; not proof of SaabDiag compatibility",
+      "rights": "Copyright GM 2005; link only; no redistribution permission recorded"
+    },
+    {
+      "id": "saab-security-2008",
+      "title": "Get Security Access - Saab 9-3 (9440), 2008",
+      "url": "https://saabwisonline.com/9-3-9440/2008/0-general/tech-2/technical-description/get-security-access",
+      "kind": "security-workflow-reference",
+      "publisher": "Historical Saab workshop material",
+      "host": "SaabWISOnline",
+      "applicability": "9-3 (9440), model year 2008; historical TIS 2000 workflow",
+      "rights": "Link only; redistribution permission not established"
+    }
+  ]
+}

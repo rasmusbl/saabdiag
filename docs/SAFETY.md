@@ -1,12 +1,12 @@
 # Safety boundaries
 
-These are requirements for future implementation, not claims of existing enforcement code.
+The simulation implements named-operation allowlisting, unknown-profile rejection, bounded reads and failure-driven session invalidation. Hardware and write requirements below remain gates for future implementation.
 
 ## Default policy
 
 Allow only reviewed named read operations for a supported profile. No arbitrary command console, raw send endpoint, automatic vehicle discovery or automatic reconnection replay. Unknown operations and mismatched identities fail closed.
 
-The following are state-changing and remain unavailable: DTC clearing, ECU resets, actuator routines, service adaptations, coding/configuration, key/security functions, module pairing, memory erase and firmware/calibration writes. A function labeled "diagnostics" is not necessarily read-only.
+The following real operations are state-changing and remain denied by the diagnostic API: DTC clearing, ECU resets, actuator routines, service adaptations, coding/configuration, key/security functions, module pairing, memory erase and firmware/calibration writes. A function labeled "diagnostics" is not necessarily read-only.
 
 ## Stationary and bench testing
 
@@ -36,3 +36,11 @@ VINs, raw traces and module identifiers can be sensitive. Store them locally onl
 ## Release evidence
 
 Every advertised capability must state its profile coverage and evidence level: simulated, bench-tested or vehicle-validated. A successful build or a responding adapter is not a vehicle safety certification.
+
+## Virtual workshop boundary
+
+`VirtualWorkshop` is an isolated in-memory demonstration with a separate `DemoAction` enum and no dependency on `ITransport` or `DiagnosticSession`. It cannot accept raw commands, addresses, keys, calibration files or firmware bytes. Its named actions change fixture values only. Single-use previews, confirmation, module/action matching, cancellation and generation checks protect demo state. Injected errors discard changes before commit. This does not model real flash interruption or promise vehicle rollback. The production diagnostic allowlist still denies every write operation.
+
+## Authorization framework update, 2026-11-19
+
+The provider decision framework and all requested provider options are implemented; no executable real provider is registered. Tests use isolated fake providers. Decisions are scoped, expire and are invalidated by connection changes. They never bypass diagnostic operation policy. A separate offline Trionic 8 level 0x01 calculator is available; it cannot grant approval or send vehicle commands. See CODE_GENERATION.md. See AUTHORIZATION_PROVIDERS.md; milestones for hardware/security access remain unmet.

@@ -4,9 +4,9 @@
 
 Clone the private repository using your existing GitHub access, then add/open the checkout folder as a local Codex project. Keep AGENTS.md at its root. Official project guidance: https://learn.chatgpt.com/docs/projects
 
-There is no runnable application, dependency manifest or test suite yet. Do not run the historical `pip install -r requirements.txt` / `python saabdiag.py` instructions until those files have actually been recovered and reviewed.
+A runnable .NET/WPF simulator and dependency-free console test runner now exist. See README.md for build/run commands and docs/VALIDATION.md for evidence. Do not run the historical `pip install -r requirements.txt` / `python saabdiag.py` instructions until those files have actually been recovered and reviewed.
 
-## First implementation branch
+## Development workflow
 
 1. Read README.md, AGENTS.md and the safety/provenance documents.
 2. Create a feature branch.
@@ -32,6 +32,10 @@ Use a Windows CI job for implemented Windows components and offline tests. Do no
 
 Use small changes with concrete before/after behavior. Include exact validation, evidence level and remaining limitations. Add dependencies only with source/license review. No open-source license is selected yet; keep third-party licensing intact.
 
-## Suggested next Codex prompt
+## Next development task
 
-"Read AGENTS.md and docs. Establish a new simulation-first Python read-only prototype unless the original ZIP is supplied. Implement named generic OBD reads behind a transport interface with deny-by-default operation policy. Add offline tests for parsing, failures and prohibited operations. Do not connect to a real vehicle or implement writes. Update README with exact setup, test commands and remaining limitations."
+Expand evidence-backed offline protocol fixtures before introducing a hardware transport. Exact adapter, year, engine, transmission and module details are needed for real vehicle coverage. Keep physical Tech 2 card integration outside scope. Never treat synthetic JSON fixture parsing as validated OBD/CAN parsing.
+
+## Connectivity setup update, 2026-11-19
+
+Six connection scenarios, manual Windows registry inventory and fail-closed configuration checks are implemented. Only simulation can connect. Physical Tech 2 companion/security routes are now represented for setup planning; no real transport or authorization implementation is included. See [CONNECTIVITY.md](CONNECTIVITY.md) for exact support, sources and remaining gates.

@@ -10,6 +10,10 @@ No adapter or vehicle is currently verified with SaabDiag. Hardware names below 
 
 Do not infer single-wire/low-speed CAN support from high-speed CAN support. Do not assume every module is reachable through a generic OBD adapter. Verify bus topology, pinout, timing and gateway behavior against authoritative documentation for the exact vehicle before implementation. Historical chat statements about network speeds are not validated protocol specifications.
 
+## Confirmed connection model
+
+Windows PC -> explicitly selected vehicle adapter -> vehicle. A Tech 2 handheld is not part of the intended connection chain. The exact adapter, vehicle year, engine and transmission remain unspecified. Those details are needed before hardware integration and validation, but do not block simulation-first development.
+
 ## Evidence record template
 
 - Date and tester:
@@ -26,3 +30,7 @@ Do not infer single-wire/low-speed CAN support from high-speed CAN support. Do n
 - Known limitations:
 
 Keep real captures outside the repository. Commit only reviewed synthetic or redacted fixtures with provenance. Establish one known-good combination before expanding coverage.
+
+## Connectivity setup update, 2026-11-19
+
+Six connection scenarios, manual Windows registry inventory and fail-closed configuration checks are implemented. Only simulation can connect. Physical Tech 2 companion/security routes are now represented for setup planning; no real transport or authorization implementation is included. See [CONNECTIVITY.md](CONNECTIVITY.md) for exact support, sources and remaining gates.

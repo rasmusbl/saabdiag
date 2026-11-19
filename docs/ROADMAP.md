@@ -1,11 +1,12 @@
 # Roadmap and acceptance gates
 
-All implementation milestones below are pending. Repository preparation is complete; no scanner functionality is delivered.
+Milestone 0 now has a runnable .NET/WPF simulation, offline tests and reference catalog browser. No real scanner functionality is delivered. Hardware milestones remain pending.
 
 ## 0. Preserve provenance and establish offline development
 - Recover the Phase 1 archive if supplied; inspect its contents, dependencies and command paths before execution.
 - If unavailable, author a clearly labeled new prototype; do not reconstruct a fictional import.
-- Establish simulated transport, synthetic fixtures and automated offline tests.
+- Establish a C#/.NET core, WPF shell, simulated transport, synthetic fixtures and automated offline tests.
+- Add a reference browser over `references/catalog.json` and user-selected local manuals; preserve source and reuse-rights metadata.
 - Exit: reproducible setup, reviewed dependency versions, no hardware access on startup and accurate capability table.
 
 ## 1. Generic OBD read-only prototype
@@ -17,7 +18,7 @@ All implementation milestones below are pending. Repository preparation is compl
 - ELM327 support does not imply manufacturer module access.
 
 ## 2. Windows application and J2534 transport
-- Establish WPF solution and supported SDK; preserve simulation-first operation.
+- Extend the WPF solution with explicit hardware selection; preserve simulation-first operation.
 - Implement native broker, discovery, driver bitness handling and cleanup.
 - Validate each needed network/channel using a documented device/driver combination.
 - Exit: broker fault tests, simulated contract tests, bench connectivity evidence and a reviewed coverage matrix. Unsupported networks stay unavailable.
@@ -44,4 +45,16 @@ All implementation milestones below are pending. Repository preparation is compl
 
 ## Next concrete task
 
-Recover the ZIP if available; otherwise build a new offline-first Python prototype. Before real-device work, record the user's actual vehicle year/engine/module details, adapter model and driver version. Full Tech 2 coverage has no promised delivery date.
+Extend the new simulation-first C#/.NET prototype; the historical ZIP remains unavailable. Before real-device work, record the user's actual vehicle year/engine/module details, adapter model and driver version. Full Tech 2 coverage has no promised delivery date.
+
+## Simulator extension
+
+Synthetic discovery/VIN and virtual service demonstrations are implemented for UI development only. This does not satisfy hardware exit criteria for milestones 1–6. Real security algorithms, pairing and programming remain unimplemented and gated.
+
+## Connectivity setup update, 2026-11-19
+
+Six connection scenarios, manual Windows registry inventory and fail-closed configuration checks are implemented. Only simulation can connect. Physical Tech 2 companion/security routes are now represented for setup planning; no real transport or authorization implementation is included. See [CONNECTIVITY.md](CONNECTIVITY.md) for exact support, sources and remaining gates.
+
+## Authorization framework update, 2026-11-19
+
+The provider decision framework and all requested provider options are implemented; no executable real provider is registered. Tests use isolated fake providers. Decisions are scoped, expire and are invalidated by connection changes. They never bypass diagnostic operation policy. No algorithm or code generation is included. See AUTHORIZATION_PROVIDERS.md; milestones for hardware/security access remain unmet.

@@ -1,6 +1,6 @@
 # Proposed architecture
 
-Status: design only. None of these components is implemented.
+Status: simulation core, named-operation policy, synthetic parser, profile selection, reference catalog service and WPF shell implemented. Real protocols, hardware transports, session journal and programming remain planned.
 
 ## Layers
 
@@ -30,7 +30,9 @@ Transport contract
 
 ## Stack decision
 
-The source conversation proposed C#/.NET 8 + WPF. Retain C#/WPF as the direction, but select a currently supported SDK and dependency versions at implementation time. Do not pin the historical SDK without checking its support lifecycle. Python remains suitable for the first experiment and offline fixtures.
+The current user preference supersedes the historical Python-first plan: use C#/.NET for the first simulated diagnostic core and WPF for the Windows 10/11 UI. Baseline: .NET 10 LTS, SDK 10.0.403 pinned. Exact OS/build/driver coverage still requires validation. Microsoft runtime support depends on Windows edition and lifecycle; application compatibility testing is separate. See https://github.com/dotnet/core/blob/main/release-notes/10.0/supported-os.md and https://dotnet.microsoft.com/en-us/platform/support/policy/dotnet-core.
+
+A reference-library service owns catalog metadata and user-selected local documents, independently of diagnostic transports. It must work without an adapter. See REFERENCES.md. A future authorization provider remains disabled until the security milestone; it is not a startup prerequisite for simulation or the reference library. See SECURITY_ACCESS.md.
 
 ## Read-only boundary
 
@@ -43,3 +45,15 @@ Enforce capabilities below the UI. Prefer named operations over a general send-c
 Proposed states: disconnected -> identified -> compatible -> preflight passed -> authorized -> executing -> verifying -> complete, with explicit failed/recovery-required outcomes.
 
 Do not automatically retry interrupted erase/write/security operations. Recovery behavior is module-specific and must be designed and tested before enabling the workflow. Generic rollback cannot be promised for ECU flash operations.
+
+## Virtual workshop implementation
+
+A separate `VirtualWorkshop` class demonstrates named operations against immutable in-memory snapshots. It has no transport and shares no mutable state with diagnostic fixtures. Preview identity and workspace generation guard commits; unknown module/action pairs fail closed. The UI displays hardware execution as unavailable. The synthetic parser now accepts only the fixed demo VIN and known fixture inventory; it is not a VIN/ECU protocol implementation.
+
+## Connectivity setup update, 2026-11-19
+
+Six connection scenarios, manual Windows registry inventory and fail-closed configuration checks are implemented. Only simulation can connect. Physical Tech 2 companion/security routes are now represented for setup planning; no real transport or authorization implementation is included. See [CONNECTIVITY.md](CONNECTIVITY.md) for exact support, sources and remaining gates.
+
+## Authorization framework update, 2026-11-19
+
+The provider decision framework and all requested provider options are implemented; no executable real provider is registered. Tests use isolated fake providers. Decisions are scoped, expire and are invalidated by connection changes. They never bypass diagnostic operation policy. No algorithm or code generation is included. See AUTHORIZATION_PROVIDERS.md; milestones for hardware/security access remain unmet.

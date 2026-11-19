@@ -1,0 +1,9 @@
+<Solution>
+  <Folder Name="/src/">
+    <Project Path="src/SaabDiag.Core/SaabDiag.Core.csproj" />
+    <Project Path="src/SaabDiag.Desktop/SaabDiag.Desktop.csproj" />
+  </Folder>
+  <Folder Name="/tests/">
+    <Project Path="tests/SaabDiag.Tests/SaabDiag.Tests.csproj" />
+  </Folder>
+</Solution>

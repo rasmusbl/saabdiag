@@ -1,0 +1,71 @@
+<Window x:Class="SaabDiag.Desktop.MainWindow" xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation" xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml" Title="SaabDiag • Simulation" Width="1040" Height="900" MinWidth="900" MinHeight="780" Background="#F3F5F8">
+<Window.Resources><Style TargetType="Button"><Setter Property="Padding" Value="14,8"/><Setter Property="Margin" Value="0,0,8,8"/></Style><Style TargetType="TextBlock"><Setter Property="TextWrapping" Value="Wrap"/></Style></Window.Resources>
+<Grid Margin="28"><Grid.RowDefinitions><RowDefinition Height="Auto"/><RowDefinition Height="Auto"/><RowDefinition Height="*"/><RowDefinition Height="Auto"/></Grid.RowDefinitions>
+<Border Background="#081421" CornerRadius="8" Margin="0,0,0,16" Height="170"><Grid ClipToBounds="True">
+<Image Source="Assets/saab-93-banner.png" Stretch="Uniform" HorizontalAlignment="Right" Width="480" AutomationProperties.Name="Illustration of a silver Saab 9-3 II sedan"/>
+<StackPanel Margin="24,30,0,0" Width="360" HorizontalAlignment="Left"><TextBlock Text="SAABDIAG" FontSize="32" FontWeight="Bold" Foreground="White"/><TextBlock Text="Saab 9-3 II · 2003–2012" FontSize="18" Foreground="#C5D8E5" Margin="0,8"/><TextBlock Text="Desktop diagnostics · virtual workshop" Foreground="#A4BBCD"/></StackPanel>
+</Grid></Border>
+<Border Grid.Row="1" Background="#FFF0C7" Padding="14" Margin="0,0,0,18"><TextBlock Text="SIMULATION ONLY — synthetic readings. No adapter connection, vehicle coverage or Tech 2 equivalence has been validated." FontWeight="SemiBold"/></Border>
+<TabControl Grid.Row="2" x:Name="MainTabs">
+<TabItem Header="Connection setup"><ScrollViewer VerticalScrollBarVisibility="Auto"><StackPanel Margin="18">
+<TextBlock Text="Choose how you intend to connect" FontSize="20" FontWeight="SemiBold"/>
+<ComboBox x:Name="Scenario" DisplayMemberPath="Name" Margin="0,10,0,12" SelectionChanged="ConnectionChanged" AutomationProperties.Name="Connection scenario"/>
+<TextBlock x:Name="ConnectionRoute" FontWeight="Bold"/><TextBlock x:Name="ConnectionRequirements" Margin="0,6,0,14"/>
+<WrapPanel><StackPanel Margin="0,0,12,10"><TextBlock Text="Model year"/><ComboBox x:Name="Year" Width="100" SelectionChanged="ConnectionChanged" AutomationProperties.Name="Model year"/></StackPanel><StackPanel x:Name="FaultPanel" Margin="0,0,12,10"><TextBlock Text="Simulation response"/><ComboBox x:Name="FaultMode" Width="150" SelectionChanged="ConnectionChanged" AutomationProperties.Name="Simulated response"/></StackPanel></WrapPanel>
+<StackPanel x:Name="SerialPanel" Visibility="Collapsed"><TextBlock Text="COM port and documented baud rate"/><WrapPanel Margin="0,6,0,12"><ComboBox x:Name="PortChoice" Width="160" Margin="0,0,12,0" SelectionChanged="ConnectionChanged" AutomationProperties.Name="Explicit COM port"/><TextBox x:Name="Baud" Width="140" TextChanged="ConnectionTextChanged" AutomationProperties.Name="Documented baud rate"/></WrapPanel></StackPanel>
+<StackPanel x:Name="TcpPanel" Visibility="Collapsed"><TextBlock Text="Documented IP address and TCP port (no network discovery)"/><WrapPanel Margin="0,6,0,12"><TextBox x:Name="Host" Width="220" Margin="0,0,12,0" TextChanged="ConnectionTextChanged" AutomationProperties.Name="Adapter IP address"/><TextBox x:Name="TcpPort" Width="100" TextChanged="ConnectionTextChanged" AutomationProperties.Name="Adapter TCP port"/></WrapPanel></StackPanel>
+<StackPanel x:Name="DriverPanel" Visibility="Collapsed"><TextBlock Text="Installed J2534 driver registration"/><ComboBox x:Name="DriverChoice" DisplayMemberPath="DisplayName" Margin="0,6,0,8" SelectionChanged="ConnectionChanged" AutomationProperties.Name="J2534 driver"/><TextBlock x:Name="DriverDetails" Margin="0,0,0,12"/></StackPanel>
+<WrapPanel><Button x:Name="RefreshInventory" Content="Refresh local port / driver list" Click="RefreshInventory_Click"/><Button x:Name="CancelInventory" Content="Cancel refresh" Click="CancelInventory_Click" IsEnabled="False"/></WrapPanel>
+<TextBlock x:Name="InventoryStatus" Text="Inventory has not been read. Refresh is explicit; ports and drivers are never selected automatically." Margin="0,0,0,12"/>
+<Border Background="#E8EEF4" Padding="12" Margin="0,0,0,12"><TextBlock x:Name="ConnectionAssessmentText"/></Border>
+<WrapPanel><Button x:Name="ConnectSelected" Content="Connect selected scenario" Click="Connect_Click"/><Button Content="Disconnect" Click="Disconnect_Click"/></WrapPanel>
+<TextBlock Text="Only the simulator can connect in this build. Other scenarios support setup and prerequisite checks, not hardware communication. Registration metadata does not prove device presence, driver bitness or Saab compatibility." Foreground="#555555"/>
+</StackPanel></ScrollViewer></TabItem><TabItem Header="Diagnostics"><Grid Margin="18"><Grid.RowDefinitions><RowDefinition Height="Auto"/><RowDefinition Height="Auto"/><RowDefinition Height="*"/><RowDefinition Height="Auto"/></Grid.RowDefinitions>
+<StackPanel><TextBlock x:Name="DiagnosticConnection" Text="Disconnected. Choose a scenario in Connection setup." FontWeight="Bold" Margin="0,0,0,8"/><Button Content="Connection setup…" Click="ShowConnection_Click" HorizontalAlignment="Left"/></StackPanel>
+<WrapPanel Grid.Row="1"><Button x:Name="Live" Content="Read sample live data" Click="Live_Click" IsEnabled="False"/><Button x:Name="Dtc" Content="Read sample DTCs" Click="Dtc_Click" IsEnabled="False"/><Button x:Name="Modules" Content="Discover demo modules" Click="Modules_Click" IsEnabled="False"/><Button x:Name="Vin" Content="Read demo VIN" Click="Vin_Click" IsEnabled="False"/><Button x:Name="Cancel" Content="Cancel read" Click="Cancel_Click" IsEnabled="False"/></WrapPanel>
+<DataGrid Grid.Row="2" x:Name="Readings" AutoGenerateColumns="False" IsReadOnly="True" CanUserAddRows="False" Margin="0,8,0,12"><DataGrid.Columns><DataGridTextColumn Header="Measurement" Binding="{Binding Name}" Width="*"/><DataGridTextColumn Header="Value" Binding="{Binding Value}" Width="*"/><DataGridTextColumn Header="Unit / evidence" Binding="{Binding Unit}" Width="*"/></DataGrid.Columns></DataGrid>
+<TextBlock Grid.Row="3" Text="All results are synthetic. Real module discovery, VIN reads and all vehicle writes require validated hardware and module profiles." Foreground="#555555"/>
+</Grid></TabItem>
+<TabItem Header="Virtual workshop"><ScrollViewer VerticalScrollBarVisibility="Auto"><StackPanel Margin="18">
+<TextBlock Text="IN-MEMORY DEMONSTRATION" FontWeight="Bold" Foreground="#975400" FontSize="18"/>
+<TextBlock Text="Explore service workflows on fictional modules. This workspace has no connection to the diagnostic transport. Its state is separate from the Diagnostics sample fixtures and resets when the app closes." Margin="0,8,0,14"/>
+<WrapPanel><StackPanel Margin="0,0,12,8"><TextBlock Text="Fictional module"/><ComboBox x:Name="DemoModule" Width="170" SelectionChanged="DemoSelectionChanged"/></StackPanel><StackPanel Margin="0,0,12,8"><TextBlock Text="Demonstration"/><ComboBox x:Name="DemoOperation" Width="180" SelectionChanged="DemoSelectionChanged"/></StackPanel><StackPanel Margin="0,0,12,8"><TextBlock Text="Simulate outcome"/><ComboBox x:Name="DemoFault" Width="140" SelectionChanged="DemoSelectionChanged"/></StackPanel></WrapPanel>
+<TextBlock Text="Engine: DTC clear, reset, programming · Brakes: actuator · Cabin: configuration, security access, pairing" Margin="0,4,0,12"/>
+<WrapPanel><Button x:Name="PreviewDemo" Content="Preview virtual change" Click="PreviewDemo_Click"/><Button x:Name="ResetDemo" Content="Reset demo workspace" Click="ResetDemo_Click"/></WrapPanel>
+<Border Background="#E8EEF4" Padding="12" Margin="0,4,0,12"><TextBlock x:Name="DemoPreview" Text="Choose a module and demonstration, then preview the change."/></Border>
+<CheckBox x:Name="ConfirmDemo" Content="I understand this changes only the virtual demo." Margin="0,0,0,12"/>
+<WrapPanel><Button x:Name="ApplyDemo" Content="Apply virtual change" Click="ApplyDemo_Click" IsEnabled="False"/><Button x:Name="CancelDemo" Content="Cancel virtual change" Click="CancelDemo_Click" IsEnabled="False"/><Button Content="Run on vehicle — unavailable" IsEnabled="False"/></WrapPanel>
+<TextBlock x:Name="DemoState" FontFamily="Consolas" Margin="0,8,0,12"/>
+<TextBlock x:Name="DemoStatus" FontWeight="SemiBold"/>
+<TextBlock Text="Hardware gates: adapter and network validation; module-specific protocol evidence; authorized access; bench fault tests; verified recovery and calibration provenance. No real security algorithm or programming support is included." Foreground="#555555" Margin="0,12,0,0"/>
+</StackPanel></ScrollViewer></TabItem>
+<TabItem Header="Authorization"><ScrollViewer VerticalScrollBarVisibility="Auto"><StackPanel Margin="18">
+<TextBlock Text="Authorization providers" FontSize="20" FontWeight="SemiBold"/>
+<TextBlock Text="Provider connections require integration details and remain unavailable. The separate offline calculator below implements Trionic 8 level 0x01 only." Margin="0,8,0,14"/>
+<TextBlock Text="Provider"/><ComboBox x:Name="AuthorizationProvider" DisplayMemberPath="Name" SelectionChanged="AuthorizationSelectionChanged" Margin="0,6,0,12" AutomationProperties.Name="Authorization provider"/>
+<TextBlock Text="Requested operation"/><ComboBox x:Name="AuthorizationOperation" Width="200" HorizontalAlignment="Left" SelectionChanged="AuthorizationSelectionChanged" Margin="0,6,0,12" AutomationProperties.Name="Authorization operation"/>
+<Border Background="#E8EEF4" Padding="14" Margin="0,0,0,12"><TextBlock x:Name="AuthorizationRequirements" Text="Select a provider to see its integration requirements."/></Border>
+<WrapPanel><Button x:Name="RequestAuthorization" Content="Request authorization" Click="RequestAuthorization_Click" IsEnabled="False"/><Button x:Name="CancelAuthorization" Content="Cancel request" Click="CancelAuthorization_Click" IsEnabled="False"/></WrapPanel>
+<TextBlock x:Name="AuthorizationStatusText" Text="No provider selected. No authorization request has been sent." FontWeight="SemiBold"/>
+<Expander Header="Provider connection settings — saved on this PC" Margin="0,12" IsExpanded="True"><StackPanel Margin="0,8">
+<TextBlock Text="Select a provider above. Blank fields are allowed while gathering details. Save before switching providers. Do not enter passwords, tokens or keys." Margin="0,0,0,8"/>
+<TextBlock Text="Software / service version"/><TextBox x:Name="ProviderVersion" MaxLength="128" Margin="0,4,0,8"/>
+<TextBlock Text="Service address (HTTPS, or HTTP on localhost)"/><TextBox x:Name="ProviderAddress" MaxLength="2048" Margin="0,4,0,8"/>
+<TextBlock Text="Installation path (absolute path; optional)"/><TextBox x:Name="ProviderInstallation" MaxLength="1024" Margin="0,4,0,8"/>
+<TextBlock Text="API documentation URL (no query parameters or credentials)"/><TextBox x:Name="ProviderDocumentation" MaxLength="2048" Margin="0,4,0,8"/>
+<Button x:Name="SaveProviderSettings" Content="Save provider settings" Click="SaveProviderSettings_Click" IsEnabled="False" HorizontalAlignment="Left"/>
+<TextBlock x:Name="ProviderSettingsStatus" Text="Saved settings are configuration only. They do not enable an unimplemented connector."/>
+</StackPanel></Expander>
+<TextBlock Text="Physical Tech 2 authorization and direct ECU access are separate workflows. Approval cannot enable vehicle writes by itself. Expiry, exact target/profile/session binding and cancellation are enforced by the provider framework." Margin="0,16,0,12"/>
+<Separator Margin="0,8,0,12"/>
+<TextBlock Text="Offline key calculator — Trionic 8 / level 0x01" FontSize="18" FontWeight="SemiBold"/>
+<TextBlock Text="Published algorithm, offline tests only. Not a physical Tech 2 code, pairing code or universal Saab key. ECU software compatibility has not been validated. No connection is required." Margin="0,8,0,12"/>
+<TextBlock Text="Seed: four hexadecimal digits, high byte first"/>
+<TextBox x:Name="OfflineSeed" Width="180" HorizontalAlignment="Left" TextChanged="OfflineSeedChanged" AutomationProperties.Name="Offline Trionic 8 seed" Margin="0,6,0,12"/>
+<WrapPanel><Button Content="Calculate offline key" Click="CalculateOfflineKey_Click"/><Button Content="Clear seed and key" Click="ClearOfflineKey_Click"/></WrapPanel>
+<TextBlock x:Name="OfflineKey" Text="No key generated." FontFamily="Consolas" FontSize="18"/>
+<TextBlock x:Name="OfflineKeyStatus" Text="Nothing is sent, logged or saved. Calculation cannot enable vehicle operations." Margin="0,8,0,12"/>
+</StackPanel></ScrollViewer></TabItem>
+<TabItem Header="Repair references"><Grid Margin="18"><Grid.RowDefinitions><RowDefinition Height="Auto"/><RowDefinition Height="*"/><RowDefinition Height="Auto"/><RowDefinition Height="Auto"/></Grid.RowDefinitions><TextBlock Text="Select a reference to view its scope. Manuals open only when requested; no manuals are bundled." Margin="0,0,0,12"/><ListBox Grid.Row="1" x:Name="References" DisplayMemberPath="Title" SelectionChanged="Reference_Selected"/><TextBlock Grid.Row="2" x:Name="ReferenceDetails" Margin="0,12"/><WrapPanel Grid.Row="3"><Button Content="Open selected website" Click="OpenReference_Click"/><Button Content="Open local PDF…" Click="OpenPdf_Click"/></WrapPanel></Grid></TabItem></TabControl>
+<TextBlock Grid.Row="3" x:Name="Status" Text="Disconnected · choose a connection scenario." Margin="0,16,0,0" FontWeight="SemiBold"/>
+</Grid></Window>
